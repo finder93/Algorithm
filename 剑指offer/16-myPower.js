@@ -35,37 +35,40 @@ var g_InvalidInput = false;
 //     return result;
 // };
 
-// var powWithUnsigned = function (base, exponent) {
-//     if (exponent === 0) return 1.0;
-//     if (exponent === 1) return base;
-//     if (base >= 2.0 && exponent >= 52) return Infinity;
-//
-//     // 简单地循环的话，当exponent很大时，效率太低
-//     // let result = 1;
-//     // for (let i = 1; i <= exponent; i++) {
-//     //     result *= base;
-//     // }
+var powWithUnsigned = function (base, exponent) {
+    if (exponent === 0) return 1.0;
+    if (exponent === 1) return base;
+    if (base >= 2.0 && exponent >= 52) return Infinity;
 
-//     let result = powWithUnsigned(base, exponent >> 1);
-//     result *= result;
-//     if ((exponent & 1) === 1) result *= base;
+    // 简单地循环的话，当exponent很大时，效率太低
+    // let result = 1;
+    // for (let i = 1; i <= exponent; i++) {
+    //     result *= base;
+    // }
 
-//     return result;
-// };
+    let result = powWithUnsigned(base, exponent >> 1);
+    result *= result;
+    if ((exponent & 1) === 1) result *= base;
+
+    return result;
+};
 
 // 快速幂
 var myPow = function (base, exponent) {
     if (base == 0) return 0;
-    let b = exponent;
+    if (base === 1.0) return 1.0;
+    if (base === -1.0) return exponent & (1 === 1) ? -1.0 : 1.0;
     let res = 1.0;
-    if (b < 0) {
+    if (exponent < 0) {
         base = 1 / base;
-        b = -b;
+        exponent = -exponent;
     }
-    while (b > 0) {
-        if ((b & 1) == 1) res *= base;
+    while (exponent > 0) {
+        // 取余数 n % 2 等价于 判断二进制最右一位值 n & 1；
+        if ((exponent & 1) === 1) res *= base;
         base *= base;
-        b >>= 1;
+        // 向下整除 Math.floor(n/2) 等价于 右移一位 n >> 1
+        exponent >>= 1;
     }
     return res;
 };
