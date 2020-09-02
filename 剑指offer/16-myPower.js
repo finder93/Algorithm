@@ -55,7 +55,7 @@ var powWithUnsigned = function (base, exponent) {
 
 // 快速幂
 var myPow = function (base, exponent) {
-    if (base == 0) return 0;
+    if (base === 0.0) return 0.0;
     if (base === 1.0) return 1.0;
     if (base === -1.0) return exponent & (1 === 1) ? -1.0 : 1.0;
     let res = 1.0;
@@ -68,7 +68,9 @@ var myPow = function (base, exponent) {
         if ((exponent & 1) === 1) res *= base;
         base *= base;
         // 向下整除 Math.floor(n/2) 等价于 右移一位 n >> 1
-        exponent >>= 1;
+        // 最好不要使用 >> ，推荐使用 >>> 。因为最左边一位会被解析成符号位，当数字溢出时，会被解析成负数。
+        exponent = exponent >>> 1;
+        // 2147483648>>1 = -1073741824
     }
     return res;
 };
