@@ -40,7 +40,6 @@
 //     }
 // };
 
-
 // function longestPalindrome(s) { // 中心拓展法
 //     if (s == null || s.length < 1) return "";
 //     var start = 0,
@@ -69,84 +68,93 @@
 //     return s.substring(start, end + 1);
 // }
 
-function longestPalindrome(s) { // 马拉车法1
-    if (s.length == 0 || s.length == 1) return s
+function longestPalindrome(s) {
+    // 马拉车法1
+    if (s.length == 0 || s.length == 1) return s;
     var N = 2 * s.length + 1,
-        C = 1, // centerPosition 
-        R = 2, // centerRightPosition 
-        i = 0, // currentRightPosition 
+        C = 1, // centerPosition
+        R = 2, // centerRightPosition
+        i = 0, // currentRightPosition
         iMirror = 0, // currentLeftPosition
         maxLPSLength = 0, // 最长回文长度S
         maxLPSCenterPosition = 0,
         start = -1,
         end = -1,
         diff = -1,
-        L = []
-    L[0] = 0
-    L[1] = 1
+        L = [];
+    L[0] = 0;
+    L[1] = 1;
 
     for (i = 2; i < N; i++) {
-        iMirror = 2 * C - i
-        L[i] = 0
-        diff = R - i
-        if (diff > 0)
-            L[i] = Math.min(L[iMirror], diff)
+        iMirror = 2 * C - i;
+        L[i] = 0;
+        diff = R - i;
+        if (diff > 0) L[i] = Math.min(L[iMirror], diff);
         while (
-            ((i + L[i] < N) && (i - L[i] > 0)) &&
-            (((i + L[i] + 1) % 2 == 0) || (s[parseInt((i + L[i] + 1) / 2)] == s[parseInt((i - L[i] - 1) / 2)]))
+            i + L[i] < N &&
+            i - L[i] > 0 &&
+            ((i + L[i] + 1) % 2 == 0 ||
+                s[parseInt((i + L[i] + 1) / 2)] ==
+                    s[parseInt((i - L[i] - 1) / 2)])
         ) {
-            L[i]++
+            L[i]++;
         }
         if (L[i] > maxLPSLength) {
-            maxLPSLength = L[i]
-            maxLPSCenterPosition = i
+            maxLPSLength = L[i];
+            maxLPSCenterPosition = i;
         }
         if (i + L[i] > R) {
-            C = i
-            R = i + L[i]
+            C = i;
+            R = i + L[i];
         }
-        start = parseInt((maxLPSCenterPosition - maxLPSLength) / 2)
-        end = start + maxLPSLength - 1
+        start = parseInt((maxLPSCenterPosition - maxLPSLength) / 2);
+        end = start + maxLPSLength - 1;
     }
-    return s.substring(start, end + 1)
+    return s.substring(start, end + 1);
 }
 
-function longestPalindrome(s) { // 马拉车法2
-    if (s.length == 0 || s.length == 1) return s
-    let s_new = '#' + s.split('').join('#') + '#'
-    var radius = [1, 2]
-    var R = -1
-    var c = -1
-    var max = -1
-    var maxPosit = -1
+function longestPalindrome(s) {
+    // 马拉车法2
+    if (s.length == 0 || s.length == 1) return s;
+    let s_new = "#" + s.split("").join("#") + "#";
+    var radius = [1, 2];
+    var R = -1;
+    var c = -1;
+    var max = -1;
+    var maxPosit = -1;
     for (var i = 0; i < s_new.length; i++) {
-        radius[i] = R > i ? Math.min(radius[2 * c - i], R - i + 1) : 1
+        radius[i] = R > i ? Math.min(radius[2 * c - i], R - i + 1) : 1;
         while (i + radius[i] < s_new.length && i - radius[i] > -1) {
             if (s_new[i - radius[i]] == s_new[i + radius[i]]) {
-                radius[i]++
+                radius[i]++;
             } else {
-                break
+                break;
             }
         }
         if (i + radius[i] > R) {
-            R = i + radius[i] - 1
-            c = i
+            R = i + radius[i] - 1;
+            c = i;
         }
         if (max < radius[i]) {
-            max = radius[i]
-            maxPosit = i
+            max = radius[i];
+            maxPosit = i;
         }
     }
-    return s_new.substring(maxPosit - max + 1, maxPosit + max).split('#').join('').trim()
+    return s_new
+        .substring(maxPosit - max + 1, maxPosit + max)
+        .split("#")
+        .join("")
+        .trim();
 }
 
-
-var s = 'abcba'
-var s1 = "cbbc"
-var s2 = "zudfweormatjycujjirzjpyrmaxurectxrtqedmmgergwdvjmjtstdhcihacqnothgttgqfywcpgnuvwglvfiuxteopoyizgehkwuvvkqxbnufkcbodlhdmbqyghkojrgokpwdhtdrwmvdegwycecrgjvuexlguayzcammupgeskrvpthrmwqaqsdcgycdupykppiyhwzwcplivjnnvwhqkkxildtyjltklcokcrgqnnwzzeuqioyahqpuskkpbxhvzvqyhlegmoviogzwuiqahiouhnecjwysmtarjjdjqdrkljawzasriouuiqkcwwqsxifbndjmyprdozhwaoibpqrthpcjphgsfbeqrqqoqiqqdicvybzxhklehzzapbvcyleljawowluqgxxwlrymzojshlwkmzwpixgfjljkmwdtjeabgyrpbqyyykmoaqdambpkyyvukalbrzoyoufjqeftniddsfqnilxlplselqatdgjziphvrbokofvuerpsvqmzakbyzxtxvyanvjpfyvyiivqusfrsufjanmfibgrkwtiuoykiavpbqeyfsuteuxxjiyxvlvgmehycdvxdorpepmsinvmyzeqeiikajopqedyopirmhymozernxzaueljjrhcsofwyddkpnvcvzixdjknikyhzmstvbducjcoyoeoaqruuewclzqqqxzpgykrkygxnmlsrjudoaejxkipkgmcoqtxhelvsizgdwdyjwuumazxfstoaxeqqxoqezakdqjwpkrbldpcbbxexquqrznavcrprnydufsidakvrpuzgfisdxreldbqfizngtrilnbqboxwmwienlkmmiuifrvytukcqcpeqdwwucymgvyrektsnfijdcdoawbcwkkjkqwzffnuqituihjaklvthulmcjrhqcyzvekzqlxgddjoir"
-var s3 = "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
-var s4 = 'babad'
-var s5 = 'ccc'
-var s6 = "cbbd"
+var s = "abcba";
+var s1 = "cbbc";
+var s2 =
+    "zudfweormatjycujjirzjpyrmaxurectxrtqedmmgergwdvjmjtstdhcihacqnothgttgqfywcpgnuvwglvfiuxteopoyizgehkwuvvkqxbnufkcbodlhdmbqyghkojrgokpwdhtdrwmvdegwycecrgjvuexlguayzcammupgeskrvpthrmwqaqsdcgycdupykppiyhwzwcplivjnnvwhqkkxildtyjltklcokcrgqnnwzzeuqioyahqpuskkpbxhvzvqyhlegmoviogzwuiqahiouhnecjwysmtarjjdjqdrkljawzasriouuiqkcwwqsxifbndjmyprdozhwaoibpqrthpcjphgsfbeqrqqoqiqqdicvybzxhklehzzapbvcyleljawowluqgxxwlrymzojshlwkmzwpixgfjljkmwdtjeabgyrpbqyyykmoaqdambpkyyvukalbrzoyoufjqeftniddsfqnilxlplselqatdgjziphvrbokofvuerpsvqmzakbyzxtxvyanvjpfyvyiivqusfrsufjanmfibgrkwtiuoykiavpbqeyfsuteuxxjiyxvlvgmehycdvxdorpepmsinvmyzeqeiikajopqedyopirmhymozernxzaueljjrhcsofwyddkpnvcvzixdjknikyhzmstvbducjcoyoeoaqruuewclzqqqxzpgykrkygxnmlsrjudoaejxkipkgmcoqtxhelvsizgdwdyjwuumazxfstoaxeqqxoqezakdqjwpkrbldpcbbxexquqrznavcrprnydufsidakvrpuzgfisdxreldbqfizngtrilnbqboxwmwienlkmmiuifrvytukcqcpeqdwwucymgvyrektsnfijdcdoawbcwkkjkqwzffnuqituihjaklvthulmcjrhqcyzvekzqlxgddjoir";
+var s3 =
+    "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
+var s4 = "babad";
+var s5 = "ccc";
+var s6 = "cbbd";
 // console.log(s[0])
-console.log(longestPalindrome(s6))
+console.log(longestPalindrome(s6));
