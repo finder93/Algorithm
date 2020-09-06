@@ -72,6 +72,8 @@ var mirrorTree = function (root) {
     return root;
 };
 
+module.exports = mirrorTree;
+
 // 定义一个二叉树
 var node0 = new TreeNode(0);
 var node1 = new TreeNode(1);
@@ -93,4 +95,4 @@ node1.right = node4;
 node2.left = node5;
 node2.right = node6;
 
-console.log(mirrorTree(node0));
+// console.log(mirrorTree(node0));
